@@ -2,12 +2,16 @@
 #include "HashNode.h"
 #include <iostream>
 #include <fstream>
+
 template <typename T, size_t tableSize>
-struct MyKeyHash
+struct HashByFirstChar
 {
-	unsigned long operator()(const int& k) const
+	unsigned long operator()(const T& word) const
 	{
-		return k % tableSize;
+		if (isalpha(word[0]))
+			return (tolower(word[0]) - 'a') % tableSize;
+		else
+			return tableSize - 1;
 	}
 };
 
@@ -115,34 +119,6 @@ public:
 			delete trav;
 		}
 	}
-	//// TODO.
-	//void remove(const K& key)
-	//{
-	//	unsigned long index = hashFunc(key);
-	//	HashNode<K>* prev = nullptr;
-	//	HashNode<K>* trav = hashtable[index];
-
-	//	while (trav != nullptr && trav->key == key)
-	//	{
-	//		hashtable[index] = trav->next;
-	//		delete trav;
-	//		trav = hashtable[index];
-	//	}
-
-	//	while (trav != nullptr)
-	//	{
-	//		while (trav->next != nullptr && trav->key != key)
-	//		{
-	//			prev = trav;
-	//			trav = trav->next;
-	//		}
-	//		
-	//		prev->next = trav->next;
-
-	//		delete trav;
-	//		trav = prev->next;
-	//	}
-	//}
 
 	HashNode<K>* getHashtable(size_t i)
 	{
@@ -175,7 +151,7 @@ public:
 		return out;
 	}
 
-	friend std::ostream& operator<<(std::ostream& out, HashMap<K, tableSize, MyKeyHash<K, tableSize>>& hmap)
+	friend std::ostream& operator<<(std::ostream& out, HashMap<K, tableSize, HashByFirstChar<K, tableSize>>& hmap)
 	{
 		for (size_t i = 0; i < tableSize; ++i)
 		{

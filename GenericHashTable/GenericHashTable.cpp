@@ -6,7 +6,7 @@
 
 int main()
 {
-	HashMap<std::string, 36> hmap;
+	HashMap<std::string, 27, HashByFirstChar<std::string, 27>> hmap;
 
 	std::ifstream rfile("C:\\source\\GenericHashTable\\GenericHashTable\\texts\\constitution.txt");
 
@@ -15,10 +15,6 @@ int main()
 	{
 		hmap.put(word);
 	}
-	std::cout << hmap;
-
-	hmap.remove("People");
-
 	std::cout << hmap;
 }
 

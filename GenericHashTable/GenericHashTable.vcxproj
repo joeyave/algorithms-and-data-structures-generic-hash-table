@@ -152,8 +152,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GenericHashTable.cpp" />
-    <ClCompile Include="HashMap.cpp" />
-    <ClCompile Include="HashNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HashMap.h" />
