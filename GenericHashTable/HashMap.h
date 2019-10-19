@@ -27,18 +27,18 @@ struct HashFunc
 };
 
 // Hash map class template
-template <typename K, size_t tableSize, typename F = HashFunc<K, tableSize>>
+template <typename K, typename V, size_t tableSize, typename F = HashFunc<K, tableSize>>
 class HashMap
 {
 private:
 	F hashFunc;
-	HashNode<K>** hashtable;
+	HashNode<K, V>** hashtable;
 	size_t used_buckets = 0;
 
 public:
 	HashMap()
 	{ 
-		hashtable = new HashNode<K>*[tableSize]();
+		hashtable = new HashNode<K, V>*[tableSize]();
 	}
 
 	~HashMap()
@@ -46,11 +46,11 @@ public:
 		// destroy all buckets one by one
 		for (size_t i = 0; i < tableSize; ++i) 
 		{
-			HashNode<K>* trav = hashtable[i];
+			HashNode<K, V>* trav = hashtable[i];
 
 			while (trav != nullptr) 
 			{
-				HashNode<K>* prev = trav;
+				HashNode<K, V>* prev = trav;
 				trav = trav->next;
 				delete prev;
 			}
@@ -59,31 +59,30 @@ public:
 		}
 	}
 
-	bool get(const K& key, K& value)
+	V get(const K& key)
 	{
 		unsigned long index = hashFunc(key);
-		HashNode<K>* trav = hashtable[index];
+		HashNode<K, V>* trav = hashtable[index];
 
 		while (trav != nullptr) 
 		{
 			if (trav->key == key) 
 			{
-				value = trav->val;
-				return true;
+				return trav->val;
 			}
 
 			trav = trav->next;
 		}
 
-		return false;
+		return nullptr;
 	}
 
-	void put(const K& key)
+	void put(const K& key, const V& value)
 	{
 		unsigned long index = hashFunc(key);
-		HashNode<K>* trav = hashtable[index];
+		HashNode<K, V>* trav = hashtable[index];
 
-		HashNode<K>* new_node = new HashNode<K>(key);
+		HashNode<K, V>* new_node = new HashNode<K, V>(key, value);
 
 		if (hashtable[index] == nullptr)
 			hashtable[index] = new_node;
@@ -98,9 +97,9 @@ public:
 	void remove(const K& key)
 	{
 		unsigned long index = hashFunc(key);
-		HashNode<K>* trav;
-		HashNode<K>* prev = nullptr;
-		HashNode<K>* next;
+		HashNode<K, V>* trav;
+		HashNode<K, V>* prev = nullptr;
+		HashNode<K, V>* next;
 		
 		for (trav = hashtable[index]; trav != nullptr; trav = next)
 		{
@@ -121,7 +120,7 @@ public:
 		}
 	}
 
-	HashNode<K>* getHashtable(size_t i)
+	HashNode<K, V>* getHashtable(size_t i)
 	{
 		return hashtable[i];
 	}
@@ -131,11 +130,11 @@ public:
 		return used_buckets;
 	}
 
-	friend std::ostream& operator<<(std::ostream& out, HashMap<K, tableSize, HashFunc<K, tableSize>>& hmap)
+	friend std::ostream& operator<<(std::ostream& out, HashMap<K, V, tableSize, HashFunc<K, tableSize>>& hmap)
 	{
 		for (size_t i = 0; i < tableSize; ++i)
 		{
-			HashNode<K>* trav = hmap.getHashtable(i);
+			HashNode<K, V>* trav = hmap.getHashtable(i);
 
 			if (trav == nullptr)
 				continue;
@@ -144,7 +143,8 @@ public:
 
 			while (trav != nullptr)
 			{
-				out << trav->key << " | ";
+				out << "key = " << trav->key <<
+					" value = " << trav->val << '\n';
 				trav = trav->next;
 			}
 		}
@@ -152,11 +152,11 @@ public:
 		return out;
 	}
 
-	friend std::ostream& operator<<(std::ostream& out, HashMap<K, tableSize, HashByFirstChar<K, tableSize>>& hmap)
+	friend std::ostream& operator<<(std::ostream& out, HashMap<K, V, tableSize, HashByFirstChar<K, tableSize>>& hmap)
 	{
 		for (size_t i = 0; i < tableSize; ++i)
 		{
-			HashNode<K>* trav = hmap.getHashtable(i);
+			HashNode<K, V>* trav = hmap.getHashtable(i);
 
 			if (trav == nullptr)
 				continue;
@@ -165,7 +165,8 @@ public:
 
 			while (trav != nullptr)
 			{
-				out << trav->key << '\n';
+				out << "key = " << trav->key <<
+					" value = " << trav->val << '\n';
 				trav = trav->next;
 			}
 		}

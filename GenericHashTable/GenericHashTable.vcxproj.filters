@@ -31,5 +31,8 @@
     <Text Include="texts\email-phone.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="texts\email-phone-lite.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
