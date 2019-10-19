@@ -28,9 +28,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="texts\phoneDB.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
     <Text Include="texts\email-phone.txt">
       <Filter>Resource Files</Filter>
     </Text>

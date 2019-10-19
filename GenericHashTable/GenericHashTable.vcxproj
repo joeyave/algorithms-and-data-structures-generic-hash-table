@@ -159,7 +159,6 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="texts\email-phone.txt" />
-    <Text Include="texts\phoneDB.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
