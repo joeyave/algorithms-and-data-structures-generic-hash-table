@@ -98,11 +98,12 @@ public:
 
 	friend std::ostream& operator<<(std::ostream& out, HashMap<K, V, tableSize, HashFunc<K, tableSize>>& hmap)
 	{
+		
 		for (int i = 0; i < tableSize; i++)
 		{
-			if (getHashTable(i) != nullptr && getHashTableKey(i) != -1)
-				out << "key = " << getHashTableKey(i)
-				<< "  value = " << getHashTableValue(i) << '\n';
+			if (hmap.getHashTable(i) != nullptr)
+				out << "key = " << hmap.getHashTableKey(i)
+				<< "  value = " << hmap.getHashTableValue(i) << '\n';
 		}
 		return out;
 	}
