@@ -9,8 +9,25 @@ struct HashFunc
 {
 	size_t operator()(const T& key) const
 	{
-		//return std::hash<T>() (key) % tableSize;
-		return key % tableSize;
+		return std::hash<T>() (key) % tableSize;
+		//return key % tableSize;
+		//return key % 3;
+	}
+};
+
+template <typename T, size_t tableSize>
+struct MyHashFunc
+{
+	size_t operator()(const T& phonenumber) const
+	{
+		size_t mul = 1;
+		for (size_t i = 0; phonenumber[i]; i++)
+		{
+			if ((phonenumber[i] - 48) > 0)
+				mul *= (phonenumber[i] - 48);
+		}
+
+		return mul % tableSize;
 	}
 };
 
@@ -23,7 +40,6 @@ private:
 	HashNode<K, V>** hashtable;
 
 public:
-
 	HashMap()
 	{
 		hashtable = new HashNode<K, V> * [tableSize];
@@ -32,14 +48,34 @@ public:
 			hashtable[i] = nullptr;
 	}
 
-	//~HashMap()
-	//{
-
-	//}
+	~HashMap()
+	{
+		for (size_t i = 0; i < tableSize; i++)
+		{
+			delete hashtable[i];
+		}
+		delete[] hashtable;
+	}
 
 	V get(const K& key)
 	{
-		return hashtable[key];
+		unsigned long index = hashFunc(key);
+
+		size_t i = 0;
+		while (hashtable[index] != nullptr)
+		{
+			int i = 0;
+			if (i++ > tableSize)
+				return nullptr;
+
+			if (hashtable[index]->key == key)
+				return hashtable[index]->value;
+
+			index++;
+			index = index % tableSize;
+		}
+
+		return nullptr;
 	}
 
 	void put(const K& key, const V& value)
@@ -59,7 +95,7 @@ public:
 		hashtable[index] = temp;
 	}
 
-	V remove(const K& key)
+	void remove(const K& key)
 	{
 		unsigned long index = hashFunc(key);
 
@@ -70,40 +106,39 @@ public:
 			{
 				HashNode<K, V>* temp = hashtable[index];
 				hashtable[index] = nullptr;
-
-				return temp->value;
 			}
 			index++;
 			index = index % tableSize;
 		}
-
-		return nullptr;
 	}
 
-	static HashNode<K, V>* getHashTable(size_t i)
+	HashNode<K, V>** getHashTable()
 	{
-		return hashtable[i];
-
-	}
-
-	static K getHashTableKey(size_t i)
-	{
-		return hashtable[i]->key;
-	}	
-
-	static V getHashTableValue(size_t i)
-	{
-		return hashtable[i]->value;
+		return hashtable;
 	}
 
 	friend std::ostream& operator<<(std::ostream& out, HashMap<K, V, tableSize, HashFunc<K, tableSize>>& hmap)
 	{
-		
+		HashNode<K, V>** temp = hmap.getHashTable();
+
 		for (int i = 0; i < tableSize; i++)
 		{
-			if (hmap.getHashTable(i) != nullptr)
-				out << "key = " << hmap.getHashTableKey(i)
-				<< "  value = " << hmap.getHashTableValue(i) << '\n';
+			if (temp[i] != nullptr)
+				out << i <<". key = " << temp[i]->getKey()
+				<< "  value = " << temp[i]->getValue() << '\n';
+		}
+		return out;
+	}
+
+	friend std::ostream& operator<<(std::ostream& out, HashMap<K, V, tableSize, MyHashFunc<K, tableSize>>& hmap)
+	{
+		HashNode<K, V>** temp = hmap.getHashTable();
+
+		for (int i = 0; i < tableSize; i++)
+		{
+			if (temp[i] != nullptr)
+				out << i << ". key = " << temp[i]->getKey()
+				<< "  value = " << temp[i]->getValue() << '\n';
 		}
 		return out;
 	}

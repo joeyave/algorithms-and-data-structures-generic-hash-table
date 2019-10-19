@@ -13,4 +13,14 @@ struct HashNode
 		value = _value;
 		next = nullptr;
 	}
+
+	K getKey()
+	{
+		return key;
+	}
+
+	V getValue()
+	{
+		return value;
+	}
 };
