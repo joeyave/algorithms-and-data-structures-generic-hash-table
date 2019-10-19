@@ -158,37 +158,7 @@
     <ClInclude Include="HashNode.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="texts\aca.txt" />
-    <Text Include="texts\austen.txt" />
-    <Text Include="texts\bible.txt" />
-    <Text Include="texts\birdman.txt" />
-    <Text Include="texts\burnett.txt" />
-    <Text Include="texts\carroll.txt" />
-    <Text Include="texts\cat.txt" />
-    <Text Include="texts\constitution.txt" />
-    <Text Include="texts\federalist.txt" />
-    <Text Include="texts\frankenstein.txt" />
-    <Text Include="texts\grimm.txt" />
-    <Text Include="texts\her.txt" />
-    <Text Include="texts\holmes.txt" />
-    <Text Include="texts\homer.txt" />
-    <Text Include="texts\koran.txt" />
-    <Text Include="texts\lalaland.txt" />
-    <Text Include="texts\mansfield.txt" />
-    <Text Include="texts\pneumonoultramicroscopicsilicovolcanoconiosis.txt" />
-    <Text Include="texts\revenant.txt" />
-    <Text Include="texts\rinehart.txt" />
-    <Text Include="texts\shakespeare.txt" />
-    <Text Include="texts\stein.txt" />
-    <Text Include="texts\stoker.txt" />
-    <Text Include="texts\surgery.txt" />
-    <Text Include="texts\testfile.txt" />
-    <Text Include="texts\tolstoy.txt" />
-    <Text Include="texts\wells.txt" />
-    <Text Include="texts\whittier.txt" />
-    <Text Include="texts\wordsworth.txt" />
-    <Text Include="texts\xueqin1.txt" />
-    <Text Include="texts\xueqin2.txt" />
+    <Text Include="texts\email-phone.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

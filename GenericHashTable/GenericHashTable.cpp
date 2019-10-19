@@ -6,14 +6,15 @@
 
 int main()
 {
-	HashMap<std::string, 27, HashByFirstChar<std::string, 27>> hmap;
+	HashMap<std::string, 40, HashByFirstChar<std::string, 40>> hmap;
 
-	std::ifstream rfile("C:\\source\\GenericHashTable\\GenericHashTable\\texts\\constitution.txt");
+	std::ifstream rfile("C:\\source\\GenericHashTable\\GenericHashTable\\texts\\email-phone.txt");
 
-	std::string word;
-	while (rfile >> word)
+	std::string email;
+	std::string phonenumber;
+	while (rfile >> email >> phonenumber)
 	{
-		hmap.put(word);
+		hmap.put(email);
 	}
 	std::cout << hmap;
 }

@@ -10,8 +10,9 @@ struct HashByFirstChar
 	{
 		if (isalpha(word[0]))
 			return (tolower(word[0]) - 'a') % tableSize;
-		else
-			return tableSize - 1;
+		else if (isdigit(word[0]))
+			return (word[0] - 48) + 26;
+		return tableSize - 1;
 	}
 };
 
@@ -164,7 +165,7 @@ public:
 
 			while (trav != nullptr)
 			{
-				out << trav->key << " | ";
+				out << trav->key << '\n';
 				trav = trav->next;
 			}
 		}
