@@ -158,6 +158,7 @@
     <ClInclude Include="HashNode.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="loremipum.txt" />
     <Text Include="texts\aca.txt" />
     <Text Include="texts\austen.txt" />
     <Text Include="texts\bible.txt" />

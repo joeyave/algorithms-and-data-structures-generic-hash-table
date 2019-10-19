@@ -2,21 +2,15 @@
 #include "HashNode.h"
 #include <iostream>
 #include <fstream>
-struct MyKeyHash
-{
-	unsigned long operator()(const int& k) const
-	{
-		return k % 10;
-	}
-};
 
 // Uses std::hash as default hash function
 template <typename T, size_t tableSize>
-struct HashFunc 
+struct HashFunc
 {
 	size_t operator()(const T& key) const
 	{
-		return std::hash<T>() (key) % tableSize;
+		//return std::hash<T>() (key) % tableSize;
+		return key % tableSize;
 	}
 };
 
@@ -27,163 +21,89 @@ class HashMap
 private:
 	F hashFunc;
 	HashNode<K, V>** hashtable;
-	size_t used_buckets = 0;
 
 public:
 
 	HashMap()
-	{ 
-		hashtable = new HashNode<K, V>*[tableSize]();
-	}
-
-	~HashMap()
 	{
-		// destroy all buckets one by one
-		for (size_t i = 0; i < tableSize; ++i) 
-		{
-			HashNode<K, V>* trav = hashtable[i];
+		hashtable = new HashNode<K, V> * [tableSize];
 
-			while (trav != nullptr) 
-			{
-				HashNode<K, V>* prev = trav;
-				trav = trav->getNext();
-				delete prev;
-			}
-
+		for (int i = 0; i < tableSize; i++)
 			hashtable[i] = nullptr;
-		}
 	}
 
-	bool get(const K& key, V& value)
+	//~HashMap()
+	//{
+
+	//}
+
+	V get(const K& key)
 	{
-		unsigned long hashValue = hashFunc(key);
-		HashNode<K, V>* trav = hashtable[hashValue];
-
-		while (trav != nullptr) 
-		{
-			if (trav->getKey() == key) 
-			{
-				value = trav->getValue();
-				return true;
-			}
-
-			trav = trav->getNext();
-		}
-
-		return false;
+		return hashtable[key];
 	}
 
 	void put(const K& key, const V& value)
 	{
-		unsigned long hashValue = hashFunc(key);
-		HashNode<K, V>* prev = nullptr;
-		HashNode<K, V>* trav = hashtable[hashValue];
+		HashNode<K, V>* temp = new HashNode<K, V>(key, value);
 
-		while (trav != nullptr) 
-		{
-			prev = trav;
-			trav = trav->getNext();
-		}
+		unsigned long index = hashFunc(key);
 
-		if (trav == nullptr) 
+		// Linear search for free space.
+		while (hashtable[index] != nullptr
+			&& hashtable[index]->key != key)
 		{
-			trav = new HashNode<K, V>(key, value);
-
-			if (prev == nullptr) 
-			{
-				// insert as first bucket
-				hashtable[hashValue] = trav;
-				used_buckets++;
-			}
-			else
-			{
-				prev->setNext(trav);
-			}
+			index++;
+			index = index % tableSize;
 		}
-		else 
-		{
-			// just update the value
-			trav->setValue(value);
-		}
+		
+		hashtable[index] = temp;
 	}
 
-	void remove(const K& key)
+	V remove(const K& key)
 	{
-		unsigned long hashValue = hashFunc(key);
-		HashNode<K, V>* prev = nullptr;
-		HashNode<K, V>* trav = hashtable[hashValue];
+		unsigned long index = hashFunc(key);
 
-		while (trav != nullptr && trav->getKey() != key) {
-			prev = trav;
-			trav = trav->getNext();
-		}
+		// Searching for a node.
+		while (hashtable[index] != nullptr)
+		{
+			if (hashtable[index]->key == key)
+			{
+				HashNode<K, V>* temp = hashtable[index];
+				hashtable[index] = nullptr;
 
-		if (trav == nullptr) {
-			// key not found
-			return;
-
-		}
-		else {
-			if (prev == nullptr) {
-				// remove first bucket of the list
-				hashtable[hashValue] = trav->getNext();
-
+				return temp->value;
 			}
-			else {
-				prev->setNext(trav->getNext());
-			}
-
-			delete trav;
+			index++;
+			index = index % tableSize;
 		}
+
+		return nullptr;
 	}
 
-	HashNode<K, V>* getHashtable(size_t i)
+	static HashNode<K, V>* getHashTable(size_t i)
 	{
 		return hashtable[i];
+
 	}
 
-	size_t getUsedBuckets()
+	static K getHashTableKey(size_t i)
 	{
-		return used_buckets;
+		return hashtable[i]->key;
+	}	
+
+	static V getHashTableValue(size_t i)
+	{
+		return hashtable[i]->value;
 	}
 
 	friend std::ostream& operator<<(std::ostream& out, HashMap<K, V, tableSize, HashFunc<K, tableSize>>& hmap)
 	{
-		for (size_t i = 0; i < tableSize; ++i)
+		for (int i = 0; i < tableSize; i++)
 		{
-			HashNode<K, V>* trav = hmap.getHashtable(i);
-
-			if (trav == nullptr)
-				continue;
-
-			while (trav != nullptr)
-			{
-				out << trav->getValue() << " | ";
-				trav = trav->getNext();
-			}
-			out << "\n\n--------------------- " << "BUCKET " << i << " ---------------------\n\n";
+			if (getHashTable(i) != nullptr && getHashTableKey(i) != -1)
+				out << "key = " << getHashTableKey(i)
+				<< "  value = " << getHashTableValue(i) << '\n';
 		}
-
-		return out;
-	}
-
-	friend std::ostream& operator<<(std::ostream& out, HashMap<K, V, tableSize, MyKeyHash>& hmap)
-	{
-		for (size_t i = 0; i < tableSize; ++i)
-		{
-			HashNode<K, V>* trav = hmap.getHashtable(i);
-
-			if (trav == nullptr)
-				continue;
-
-			while (trav != nullptr)
-			{
-				out << trav->getValue() << " | ";
-				trav = trav->getNext();
-			}
-			out << "\n\n--------------------- " << "BUCKET " << i << " ---------------------\n\n";
-		}
-
 		return out;
 	}
 };

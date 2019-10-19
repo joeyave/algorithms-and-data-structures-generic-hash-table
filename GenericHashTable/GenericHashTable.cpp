@@ -6,19 +6,18 @@
 
 int main()
 {
-	HashMap<char, std::string, 100> hmap;
+	HashMap<int, std::string, 100> hmap;
 
-	std::ifstream rfile("C:\\source\\GenericHashTable\\GenericHashTable\\texts\\her.txt");
+	std::ifstream rfile("C:\\source\\GenericHashTable\\GenericHashTable\\texts\\loremipum.txt");
 
 	std::string word;
-	while (rfile >> word)
+	for (int i = 0; i < 100; i++)
 	{
-		hmap.put(word[0], word);
+		rfile >> word;
+		hmap.put(i, word);
 	}
 
 	std::cout << hmap;
-
-	std::cout << hmap.getUsedBuckets();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

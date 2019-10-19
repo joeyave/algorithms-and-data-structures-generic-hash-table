@@ -121,5 +121,8 @@
     <Text Include="texts\xueqin2.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="loremipum.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
